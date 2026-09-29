@@ -1,0 +1,6 @@
+{
+  "name": "Foxy Screen Recorder",
+  "description": "Modern screen recorder with 1080p 60fps, facecam overlay, customizable audio sources, floating controls, and video trimming.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
