@@ -1,5 +1,8 @@
 package com.example.ui.screens
 
+import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -39,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -146,14 +150,47 @@ fun HomeScreen(
                             }
                         }
                         Text(
-                            text = "Screen Recorder & Studio",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = FoxyTextTertiary
+                            text = "By FoxyPlayzZ",
+                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
+                            color = FoxyAccentCyan
                         )
                     }
                 }
 
-                Row {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    val localContext = LocalContext.current
+
+                    // YouTube channel button
+                    IconButton(
+                        onClick = {
+                            try {
+                                val intent = Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://youtube.com/@foxyplayzz?si=yEFjwsLs7oek6d4w")
+                                )
+                                localContext.startActivity(intent)
+                            } catch (e: Exception) {
+                                Toast.makeText(localContext, "Could not open YouTube", Toast.LENGTH_SHORT).show()
+                            }
+                        },
+                        modifier = Modifier.testTag("home_youtube_button")
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(28.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFFFF0033)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.PlayArrow,
+                                contentDescription = "FoxyPlayzZ YouTube",
+                                tint = Color.White,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
+                    }
+
                     // Permission manager button
                     IconButton(
                         onClick = onOpenPermissions,

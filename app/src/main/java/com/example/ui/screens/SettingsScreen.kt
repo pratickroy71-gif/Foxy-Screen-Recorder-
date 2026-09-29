@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +30,8 @@ import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Layers
 import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.OpenInNew
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material.icons.filled.Timer
@@ -56,6 +59,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -303,40 +307,126 @@ fun SettingsScreen(
 
         // Section: About
         item {
-            SettingsCategoryHeader(title = "About Foxy Screen Recorder")
+            SettingsCategoryHeader(title = "About App")
             GlassCard(modifier = Modifier.fillMaxWidth(), contentPadding = 16.dp) {
                 Column {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Box(
                             modifier = Modifier
-                                .size(40.dp)
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(FoxyPrimary),
+                                .size(46.dp)
+                                .clip(RoundedCornerShape(14.dp))
+                                .background(
+                                    Brush.linearGradient(
+                                        listOf(FoxyPrimary, FoxyAccentPink)
+                                    )
+                                ),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(Icons.Default.Videocam, null, tint = Color.White)
+                            Icon(Icons.Default.Videocam, null, tint = Color.White, modifier = Modifier.size(26.dp))
                         }
                         Spacer(modifier = Modifier.width(12.dp))
                         Column {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = "Foxy Screen Recorder",
+                                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                    color = FoxyTextPrimary
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Surface(
+                                    shape = RoundedCornerShape(6.dp),
+                                    color = FoxyPrimary.copy(alpha = 0.2f)
+                                ) {
+                                    Text(
+                                        text = "v1.0",
+                                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                        color = FoxyPrimaryGlow,
+                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                    )
+                                }
+                            }
                             Text(
-                                text = "Foxy Screen Recorder",
-                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                color = FoxyTextPrimary
-                            )
-                            Text(
-                                text = "Version 1.0.0 (Release Build)",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = FoxyTextTertiary
+                                text = "App Created By FoxyPlayzZ",
+                                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                                color = FoxyAccentCyan
                             )
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(14.dp))
                     Text(
-                        text = "Engineered with native Android MediaProjection API, hardware-accelerated H.264 encoding, lossless video trimming, and high-performance floating controls.",
+                        text = "Engineered with native Android MediaProjection API, hardware-accelerated MediaCodec video compression, lossless video trimming, and high-performance creator controls.",
                         style = MaterialTheme.typography.bodySmall,
                         color = FoxyTextSecondary
                     )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // YouTube Channel Link Card
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(14.dp))
+                            .clickable {
+                                try {
+                                    val intent = Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse("https://youtube.com/@foxyplayzz?si=yEFjwsLs7oek6d4w")
+                                    )
+                                    context.startActivity(intent)
+                                } catch (e: Exception) {
+                                    Toast.makeText(context, "Could not open YouTube link", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                            .testTag("youtube_channel_link_button"),
+                        color = Color(0xFF28111A),
+                        border = BorderStroke(1.dp, Color(0xFFFF0033).copy(alpha = 0.45f)),
+                        shape = RoundedCornerShape(14.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(14.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(38.dp)
+                                    .clip(CircleShape)
+                                    .background(Color(0xFFFF0033)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.PlayArrow,
+                                    contentDescription = "YouTube",
+                                    tint = Color.White,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.width(12.dp))
+
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = "FoxyPlayzZ Official YouTube",
+                                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                                    color = Color.White
+                                )
+                                Text(
+                                    text = "youtube.com/@foxyplayzz",
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace
+                                    ),
+                                    color = Color(0xFFFFB3BA)
+                                )
+                            }
+
+                            Icon(
+                                imageVector = Icons.Default.OpenInNew,
+                                contentDescription = "Visit YouTube",
+                                tint = Color(0xFFFF4D6D),
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                    }
                 }
             }
         }
