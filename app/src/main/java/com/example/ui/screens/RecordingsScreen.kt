@@ -183,8 +183,8 @@ fun RecordingsScreen(
                 unfocusedContainerColor = FoxySurfaceVariant,
                 focusedBorderColor = FoxyPrimary,
                 unfocusedBorderColor = Color(0x338C52FF),
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White
+                focusedTextColor = FoxyTextPrimary,
+                unfocusedTextColor = FoxyTextPrimary
             ),
             singleLine = true
         )
@@ -321,8 +321,8 @@ fun RecordingsScreen(
                     label = { Text("Title") },
                     singleLine = true,
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White
+                        focusedTextColor = FoxyTextPrimary,
+                        unfocusedTextColor = FoxyTextPrimary
                     )
                 )
             },
@@ -491,7 +491,7 @@ private fun RecordingListCard(
                     modifier = Modifier.background(FoxyCardElevated)
                 ) {
                     DropdownMenuItem(
-                        text = { Text("Play", color = Color.White) },
+                        text = { Text("Play", color = FoxyTextPrimary) },
                         leadingIcon = { Icon(Icons.Default.PlayArrow, null, tint = FoxyPrimaryGlow) },
                         onClick = {
                             showMenu = false
@@ -499,7 +499,7 @@ private fun RecordingListCard(
                         }
                     )
                     DropdownMenuItem(
-                        text = { Text("Trim Video", color = Color.White) },
+                        text = { Text("Trim Video", color = FoxyTextPrimary) },
                         leadingIcon = { Icon(Icons.Default.ContentCut, null, tint = FoxyAccentCyan) },
                         onClick = {
                             showMenu = false
@@ -507,7 +507,7 @@ private fun RecordingListCard(
                         }
                     )
                     DropdownMenuItem(
-                        text = { Text("Compress & Export", color = Color.White) },
+                        text = { Text("Compress & Export", color = FoxyTextPrimary) },
                         leadingIcon = { Icon(Icons.Default.Compress, null, tint = FoxyPrimaryGlow) },
                         onClick = {
                             showMenu = false
@@ -515,16 +515,16 @@ private fun RecordingListCard(
                         }
                     )
                     DropdownMenuItem(
-                        text = { Text("Share", color = Color.White) },
-                        leadingIcon = { Icon(Icons.Default.Share, null, tint = Color.White) },
+                        text = { Text("Share", color = FoxyTextPrimary) },
+                        leadingIcon = { Icon(Icons.Default.Share, null, tint = FoxyTextSecondary) },
                         onClick = {
                             showMenu = false
                             onShare()
                         }
                     )
                     DropdownMenuItem(
-                        text = { Text("Rename", color = Color.White) },
-                        leadingIcon = { Icon(Icons.Default.Edit, null, tint = Color.White) },
+                        text = { Text("Rename", color = FoxyTextPrimary) },
+                        leadingIcon = { Icon(Icons.Default.Edit, null, tint = FoxyTextSecondary) },
                         onClick = {
                             showMenu = false
                             onRename()

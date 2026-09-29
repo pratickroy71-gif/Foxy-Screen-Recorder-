@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import com.example.data.StorageHelper
 import com.example.ui.theme.FoxyAccentCyan
 import com.example.ui.theme.FoxyPrimary
+import com.example.ui.theme.FoxySurfaceVariant
 import com.example.ui.theme.FoxyTextPrimary
 import com.example.ui.theme.FoxyTextSecondary
 import com.example.ui.theme.FoxyTextTertiary
@@ -104,7 +105,7 @@ fun StorageInfoCard(
                     .height(8.dp)
                     .clip(RoundedCornerShape(4.dp)),
                 color = FoxyPrimary,
-                trackColor = Color(0xFF262040)
+                trackColor = FoxySurfaceVariant
             )
 
             Spacer(modifier = Modifier.height(12.dp))

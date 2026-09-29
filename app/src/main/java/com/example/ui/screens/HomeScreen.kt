@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -58,6 +59,7 @@ import com.example.ui.components.StorageInfoCard
 import com.example.ui.theme.FoxyAccentCyan
 import com.example.ui.theme.FoxyAccentPink
 import com.example.ui.theme.FoxyBackground
+import com.example.ui.theme.FoxyBorder
 import com.example.ui.theme.FoxyCardElevated
 import com.example.ui.theme.FoxyPrimary
 import com.example.ui.theme.FoxyPrimaryGlow
@@ -210,8 +212,7 @@ fun HomeScreen(
         item {
             GlassCard(
                 modifier = Modifier.fillMaxWidth(),
-                contentPadding = 24.dp,
-                gradientColors = listOf(FoxySurface, Color(0xFF1E173C))
+                contentPadding = 24.dp
             ) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
@@ -242,12 +243,14 @@ fun HomeScreen(
                                     modifier = Modifier
                                         .clip(RoundedCornerShape(14.dp))
                                         .clickable(onClick = onPauseClick),
-                                    color = FoxyCardElevated
+                                    color = FoxySurfaceVariant,
+                                    shape = RoundedCornerShape(14.dp),
+                                    border = BorderStroke(1.dp, FoxyBorder)
                                 ) {
                                     Text(
                                         text = if (recordingState == RecordingState.PAUSED) "Resume" else "Pause",
                                         style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
-                                        color = Color.White,
+                                        color = FoxyTextPrimary,
                                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
                                     )
                                 }
@@ -356,7 +359,7 @@ fun HomeScreen(
                             modifier = Modifier
                                 .size(56.dp)
                                 .clip(CircleShape)
-                                .background(Color(0xFF231C3E)),
+                                .background(FoxySurfaceVariant),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(

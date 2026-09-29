@@ -1,43 +1,96 @@
 package com.example.ui.theme
 
+import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
+import com.example.model.ThemeMode
 
 private val FoxyDarkColorScheme = darkColorScheme(
-    primary = FoxyPrimary,
+    primary = DarkFoxyColors.primary,
     onPrimary = Color.White,
-    primaryContainer = FoxyCardElevated,
-    onPrimaryContainer = FoxyPrimaryGlow,
-    secondary = FoxySecondary,
+    primaryContainer = DarkFoxyColors.cardElevated,
+    onPrimaryContainer = DarkFoxyColors.primaryGlow,
+    secondary = DarkFoxyColors.secondary,
     onSecondary = Color.White,
-    secondaryContainer = FoxySurfaceVariant,
+    secondaryContainer = DarkFoxyColors.surfaceVariant,
     onSecondaryContainer = Color.White,
-    tertiary = FoxyAccentCyan,
+    tertiary = DarkFoxyColors.accentCyan,
     onTertiary = Color.Black,
-    error = FoxyRecordRed,
+    error = DarkFoxyColors.recordRed,
     onError = Color.White,
-    background = FoxyBackground,
-    onBackground = FoxyTextPrimary,
-    surface = FoxySurface,
-    onSurface = FoxyTextPrimary,
-    surfaceVariant = FoxySurfaceVariant,
-    onSurfaceVariant = FoxyTextSecondary,
-    outline = FoxyBorder,
-    outlineVariant = FoxyBorderBright
+    background = DarkFoxyColors.background,
+    onBackground = DarkFoxyColors.textPrimary,
+    surface = DarkFoxyColors.surface,
+    onSurface = DarkFoxyColors.textPrimary,
+    surfaceVariant = DarkFoxyColors.surfaceVariant,
+    onSurfaceVariant = DarkFoxyColors.textSecondary,
+    outline = DarkFoxyColors.border,
+    outlineVariant = DarkFoxyColors.borderBright
+)
+
+private val FoxyLightColorScheme = lightColorScheme(
+    primary = LightFoxyColors.primary,
+    onPrimary = Color.White,
+    primaryContainer = LightFoxyColors.surfaceVariant,
+    onPrimaryContainer = LightFoxyColors.primaryDark,
+    secondary = LightFoxyColors.secondary,
+    onSecondary = Color.White,
+    secondaryContainer = LightFoxyColors.surfaceVariant,
+    onSecondaryContainer = LightFoxyColors.textPrimary,
+    tertiary = LightFoxyColors.accentCyan,
+    onTertiary = Color.White,
+    error = LightFoxyColors.recordRed,
+    onError = Color.White,
+    background = LightFoxyColors.background,
+    onBackground = LightFoxyColors.textPrimary,
+    surface = LightFoxyColors.surface,
+    onSurface = LightFoxyColors.textPrimary,
+    surfaceVariant = LightFoxyColors.surfaceVariant,
+    onSurfaceVariant = LightFoxyColors.textSecondary,
+    outline = LightFoxyColors.border,
+    outlineVariant = LightFoxyColors.borderBright
 )
 
 @Composable
 fun FoxyScreenRecorderTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    themeMode: ThemeMode = ThemeMode.DARK,
     content: @Composable () -> Unit
 ) {
-    // Dark-first aesthetic is required for creator/recorder
-    MaterialTheme(
-        colorScheme = FoxyDarkColorScheme,
-        typography = Typography,
-        content = content
-    )
+    val systemInDark = isSystemInDarkTheme()
+    val isDark = when (themeMode) {
+        ThemeMode.SYSTEM -> systemInDark
+        ThemeMode.DARK -> true
+        ThemeMode.LIGHT -> false
+    }
+
+    val foxyColors = if (isDark) DarkFoxyColors else LightFoxyColors
+    val materialScheme = if (isDark) FoxyDarkColorScheme else FoxyLightColorScheme
+
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as? Activity)?.window
+            if (window != null) {
+                val insetsController = WindowCompat.getInsetsController(window, view)
+                insetsController.isAppearanceLightStatusBars = !isDark
+                insetsController.isAppearanceLightNavigationBars = !isDark
+            }
+        }
+    }
+
+    CompositionLocalProvider(LocalFoxyColors provides foxyColors) {
+        MaterialTheme(
+            colorScheme = materialScheme,
+            typography = Typography,
+            content = content
+        )
+    }
 }

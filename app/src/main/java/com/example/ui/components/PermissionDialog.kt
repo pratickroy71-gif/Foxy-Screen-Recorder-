@@ -61,6 +61,7 @@ import com.example.ui.theme.FoxyCardElevated
 import com.example.ui.theme.FoxyPrimary
 import com.example.ui.theme.FoxyPrimaryGlow
 import com.example.ui.theme.FoxySurface
+import com.example.ui.theme.FoxySurfaceVariant
 import com.example.ui.theme.FoxyTextPrimary
 import com.example.ui.theme.FoxyTextSecondary
 import com.example.ui.theme.FoxyTextTertiary
@@ -245,7 +246,7 @@ private fun PermissionRowItem(
                 modifier = Modifier
                     .size(36.dp)
                     .clip(CircleShape)
-                    .background(if (isGranted) FoxyAccentCyan.copy(alpha = 0.2f) else Color(0xFF332D50)),
+                    .background(if (isGranted) FoxyAccentCyan.copy(alpha = 0.2f) else FoxySurfaceVariant),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(

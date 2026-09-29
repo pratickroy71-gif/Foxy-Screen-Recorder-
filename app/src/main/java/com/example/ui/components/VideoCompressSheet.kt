@@ -234,7 +234,7 @@ fun VideoCompressSheet(
                         Text(
                             text = "Compression Complete!",
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                            color = Color.White
+                            color = FoxyTextPrimary
                         )
 
                         Text(
@@ -335,7 +335,7 @@ fun VideoCompressSheet(
                                 .height(8.dp)
                                 .clip(RoundedCornerShape(4.dp)),
                             color = FoxyPrimary,
-                            trackColor = Color(0xFF2E244E)
+                            trackColor = FoxySurfaceVariant
                         )
 
                         Spacer(modifier = Modifier.height(12.dp))
@@ -384,7 +384,7 @@ fun VideoCompressSheet(
                                             style = MaterialTheme.typography.titleSmall.copy(
                                                 fontWeight = FontWeight.Bold
                                             ),
-                                            color = if (isSelected) FoxyPrimaryGlow else Color.White
+                                            color = if (isSelected) FoxyPrimaryGlow else FoxyTextPrimary
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
                                         Surface(
@@ -417,7 +417,7 @@ fun VideoCompressSheet(
                                             fontWeight = FontWeight.Bold,
                                             fontFamily = FontFamily.Monospace
                                         ),
-                                        color = Color.White
+                                        color = FoxyTextPrimary
                                     )
                                 }
                             }

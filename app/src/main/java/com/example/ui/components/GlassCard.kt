@@ -24,9 +24,9 @@ import com.example.ui.theme.FoxySurfaceVariant
 fun GlassCard(
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(20.dp),
-    border: BorderStroke? = BorderStroke(1.dp, FoxyBorder),
+    border: BorderStroke? = null,
     backgroundColor: Color? = null,
-    gradientColors: List<Color> = listOf(FoxySurface, FoxySurfaceVariant),
+    gradientColors: List<Color>? = null,
     contentPadding: Dp = 16.dp,
     onClick: (() -> Unit)? = null,
     content: @Composable BoxScope.() -> Unit
@@ -39,10 +39,13 @@ fun GlassCard(
         modifier.clip(shape)
     }
 
+    val resolvedBorder = border ?: BorderStroke(1.dp, FoxyBorder)
+    val resolvedGradients = gradientColors ?: listOf(FoxySurface, FoxySurfaceVariant)
+
     Surface(
         modifier = clickableModifier,
         shape = shape,
-        border = border,
+        border = resolvedBorder,
         color = Color.Transparent,
         tonalElevation = 2.dp
     ) {
@@ -50,7 +53,7 @@ fun GlassCard(
             Modifier.background(backgroundColor)
         } else {
             Modifier.background(
-                Brush.linearGradient(colors = gradientColors)
+                Brush.linearGradient(colors = resolvedGradients)
             )
         }
 

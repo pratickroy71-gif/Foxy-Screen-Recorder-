@@ -38,6 +38,8 @@ import androidx.compose.ui.window.DialogProperties
 import com.example.ui.theme.FoxyAccentPink
 import com.example.ui.theme.FoxyBackground
 import com.example.ui.theme.FoxyPrimary
+import com.example.ui.theme.FoxySurfaceVariant
+import com.example.ui.theme.FoxyTextPrimary
 import com.example.ui.theme.FoxyTextSecondary
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -109,8 +111,8 @@ fun CountdownDialog(
                 Button(
                     onClick = onCancel,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF2E2248),
-                        contentColor = Color.White
+                        containerColor = FoxySurfaceVariant,
+                        contentColor = FoxyTextPrimary
                     ),
                     modifier = Modifier.testTag("cancel_countdown_button")
                 ) {

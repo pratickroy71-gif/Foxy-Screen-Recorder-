@@ -10,6 +10,10 @@ import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
 import android.media.MediaMetadataRetriever
@@ -49,8 +53,9 @@ import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.math.sqrt
 
-class ScreenRecordService : Service() {
+class ScreenRecordService : Service(), SensorEventListener {
 
     companion object {
         private const val TAG = "ScreenRecordService"
@@ -77,6 +82,10 @@ class ScreenRecordService : Service() {
     private var currentConfig: RecorderConfig = RecorderConfig()
     private var isRecording = false
     private var isPaused = false
+
+    private var sensorManager: SensorManager? = null
+    private var accelerometer: Sensor? = null
+    private var lastShakeTime = 0L
 
     private lateinit var notificationManager: NotificationManager
     private lateinit var prefsManager: PreferencesManager
@@ -155,17 +164,24 @@ class ScreenRecordService : Service() {
             RecordingController.updateState(RecordingState.RECORDING)
             RecordingController.setRecordingPath(outputFile?.absolutePath)
             startTimer()
+            registerShakeDetector()
 
             // Start floating controls overlay if permitted & enabled
-            if (currentConfig.floatingControlsEnabled && android.provider.Settings.canDrawOverlays(this)) {
-                val overlayIntent = Intent(this, FloatingOverlayService::class.java).apply {
-                    action = FloatingOverlayService.ACTION_SHOW
+            if (android.provider.Settings.canDrawOverlays(this)) {
+                if (currentConfig.facecamEnabled || currentConfig.floatingControlsEnabled) {
+                    val overlayIntent = Intent(this, FloatingOverlayService::class.java).apply {
+                        action = FloatingOverlayService.ACTION_SHOW
+                    }
+                    startService(overlayIntent)
                 }
-                startService(overlayIntent)
             }
 
             vibrate(100)
-            RecordingController.notifyToast("Recording started")
+            if (currentConfig.hideOverlayDuringRecording) {
+                RecordingController.notifyToast("Recording started • Floating controls hidden to keep video clean")
+            } else {
+                RecordingController.notifyToast("Recording started")
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to start recording", e)
             RecordingController.notifyToast("Failed to start recording: ${e.message}")
@@ -534,6 +550,7 @@ class ScreenRecordService : Service() {
     }
 
     private fun cleanup() {
+        unregisterShakeDetector()
         try { virtualDisplay?.release() } catch (_: Exception) {}
         virtualDisplay = null
         try { mediaRecorder?.release() } catch (_: Exception) {}
@@ -542,6 +559,47 @@ class ScreenRecordService : Service() {
         mediaProjection = null
         MediaProjectionHolder.clear()
     }
+
+    private fun registerShakeDetector() {
+        if (!currentConfig.shakeToStop) return
+        try {
+            sensorManager = getSystemService(Context.SENSOR_SERVICE) as? SensorManager
+            accelerometer = sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+            accelerometer?.let {
+                sensorManager?.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Shake detector registration failed", e)
+        }
+    }
+
+    private fun unregisterShakeDetector() {
+        try {
+            sensorManager?.unregisterListener(this)
+        } catch (_: Exception) {}
+        sensorManager = null
+        accelerometer = null
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        if (event == null || !isRecording || !currentConfig.shakeToStop) return
+        val x = event.values[0]
+        val y = event.values[1]
+        val z = event.values[2]
+        val gForce = sqrt((x * x + y * y + z * z).toDouble()) - SensorManager.GRAVITY_EARTH
+        if (gForce > 13.0) {
+            val now = System.currentTimeMillis()
+            if (now - lastShakeTime > 1500) {
+                lastShakeTime = now
+                Log.d(TAG, "Shake to stop triggered")
+                vibrate(120)
+                RecordingController.notifyToast("Shake detected • Stopping recording")
+                handleStopRecording()
+            }
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
     override fun onDestroy() {
         super.onDestroy()

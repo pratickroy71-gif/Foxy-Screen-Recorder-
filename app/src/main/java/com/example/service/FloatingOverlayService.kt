@@ -64,14 +64,46 @@ class FloatingOverlayService : Service(), LifecycleOwner {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
         windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         prefsManager = PreferencesManager(this)
+
+        // Observe recording state to automatically hide/show overlay during recording
+        serviceScope.launch {
+            RecordingController.recordingState.collectLatest { state ->
+                val config = prefsManager.configFlow.value
+                if (config.hideOverlayDuringRecording) {
+                    when (state) {
+                        RecordingState.RECORDING -> {
+                            hideOverlay()
+                        }
+                        RecordingState.PAUSED -> {
+                            if (config.floatingControlsEnabled && Settings.canDrawOverlays(this@FloatingOverlayService)) {
+                                showOverlay()
+                            }
+                        }
+                        RecordingState.STOPPED, RecordingState.IDLE -> {
+                            hideOverlay()
+                            hideFacecam()
+                            stopSelf()
+                        }
+                        else -> {}
+                    }
+                } else if (state == RecordingState.STOPPED || state == RecordingState.IDLE) {
+                    hideOverlay()
+                    hideFacecam()
+                    stopSelf()
+                }
+            }
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
             ACTION_SHOW -> {
                 if (Settings.canDrawOverlays(this)) {
-                    showOverlay()
                     val config = prefsManager.configFlow.value
+                    val isRecording = RecordingController.recordingState.value == RecordingState.RECORDING
+                    if (!config.hideOverlayDuringRecording || !isRecording) {
+                        showOverlay()
+                    }
                     if (config.facecamEnabled) {
                         showFacecam()
                     }

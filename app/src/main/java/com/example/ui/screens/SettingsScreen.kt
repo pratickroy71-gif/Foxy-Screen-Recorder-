@@ -24,20 +24,26 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BatterySaver
+import androidx.compose.material.icons.filled.BrightnessAuto
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Layers
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.OpenInNew
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.filled.TouchApp
 import androidx.compose.material.icons.filled.Tv
+import androidx.compose.material.icons.filled.Vibration
 import androidx.compose.material.icons.filled.Videocam
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.filled.WaterDrop
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Divider
@@ -76,6 +82,7 @@ import com.example.model.FacecamSize
 import com.example.model.FrameRate
 import com.example.model.RecorderConfig
 import com.example.model.RecordingOrientation
+import com.example.model.ThemeMode
 import com.example.model.VideoResolution
 import com.example.ui.components.GlassCard
 import com.example.ui.theme.FoxyAccentCyan
@@ -128,6 +135,89 @@ fun SettingsScreen(
                 style = MaterialTheme.typography.bodySmall,
                 color = FoxyTextTertiary
             )
+        }
+
+        // Section: Appearance & Accessibility (Theme Selector)
+        item {
+            SettingsCategoryHeader(title = "Appearance & Accessibility")
+            GlassCard(modifier = Modifier.fillMaxWidth(), contentPadding = 14.dp) {
+                Column {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(FoxyPrimary.copy(alpha = 0.2f)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Palette,
+                                    contentDescription = "Theme",
+                                    tint = FoxyPrimaryGlow,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Column {
+                                Text(
+                                    text = "Theme & Contrast",
+                                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                                    color = FoxyTextPrimary
+                                )
+                                Text(
+                                    text = config.themeMode.title,
+                                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
+                                    color = FoxyAccentCyan
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    // 3-way Theme Selector
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        ThemeOptionCard(
+                            title = "System Default",
+                            icon = Icons.Default.BrightnessAuto,
+                            isSelected = config.themeMode == ThemeMode.SYSTEM,
+                            onClick = { onConfigChange(config.copy(themeMode = ThemeMode.SYSTEM)) },
+                            modifier = Modifier.weight(1f)
+                        )
+                        ThemeOptionCard(
+                            title = "Dark Mode",
+                            icon = Icons.Default.DarkMode,
+                            isSelected = config.themeMode == ThemeMode.DARK,
+                            onClick = { onConfigChange(config.copy(themeMode = ThemeMode.DARK)) },
+                            modifier = Modifier.weight(1f)
+                        )
+                        ThemeOptionCard(
+                            title = "Light Mode",
+                            icon = Icons.Default.LightMode,
+                            isSelected = config.themeMode == ThemeMode.LIGHT,
+                            onClick = { onConfigChange(config.copy(themeMode = ThemeMode.LIGHT)) },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Text(
+                        text = config.themeMode.subtitle,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = FoxyTextTertiary,
+                        modifier = Modifier.padding(horizontal = 4.dp)
+                    )
+                }
+            }
         }
 
         // Section: Video Quality
@@ -234,6 +324,26 @@ fun SettingsScreen(
                         checked = config.floatingControlsEnabled,
                         onCheckedChange = { checked ->
                             onConfigChange(config.copy(floatingControlsEnabled = checked))
+                        }
+                    )
+                    SettingsDivider()
+                    SettingsToggleItem(
+                        icon = Icons.Default.VisibilityOff,
+                        title = "Hide Controls While Recording",
+                        subtitle = "Prevents overlay buttons from being captured in the recorded video",
+                        checked = config.hideOverlayDuringRecording,
+                        onCheckedChange = { checked ->
+                            onConfigChange(config.copy(hideOverlayDuringRecording = checked))
+                        }
+                    )
+                    SettingsDivider()
+                    SettingsToggleItem(
+                        icon = Icons.Default.Vibration,
+                        title = "Shake Phone to Stop",
+                        subtitle = "Shake your phone to finish recording cleanly without showing menus",
+                        checked = config.shakeToStop,
+                        onCheckedChange = { checked ->
+                            onConfigChange(config.copy(shakeToStop = checked))
                         }
                     )
                     SettingsDivider()
@@ -617,7 +727,7 @@ private fun SettingsNavigationItem(
             modifier = Modifier
                 .size(36.dp)
                 .clip(CircleShape)
-                .background(Color(0xFF231C3C)),
+                .background(FoxySurfaceVariant),
             contentAlignment = Alignment.Center
         ) {
             Icon(imageVector = icon, contentDescription = null, tint = FoxyPrimaryGlow, modifier = Modifier.size(20.dp))
@@ -660,7 +770,7 @@ private fun SettingsToggleItem(
             modifier = Modifier
                 .size(36.dp)
                 .clip(CircleShape)
-                .background(Color(0xFF231C3C)),
+                .background(FoxySurfaceVariant),
             contentAlignment = Alignment.Center
         ) {
             Icon(imageVector = icon, contentDescription = null, tint = FoxyPrimaryGlow, modifier = Modifier.size(20.dp))
@@ -738,7 +848,7 @@ private fun <T> OptionSelectDialog(
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                             ),
-                            color = if (isSelected) FoxyPrimaryGlow else Color.White
+                            color = if (isSelected) FoxyPrimaryGlow else FoxyTextPrimary
                         )
                     }
                 }
@@ -752,4 +862,48 @@ private fun <T> OptionSelectDialog(
         },
         containerColor = FoxySurface
     )
+}
+
+@Composable
+private fun ThemeOptionCard(
+    title: String,
+    icon: ImageVector,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier
+            .clip(RoundedCornerShape(14.dp))
+            .clickable(onClick = onClick)
+            .testTag("theme_selector_${title.lowercase().replace(" ", "_")}"),
+        shape = RoundedCornerShape(14.dp),
+        color = if (isSelected) FoxyPrimary.copy(alpha = 0.18f) else FoxySurfaceVariant,
+        border = BorderStroke(
+            1.5.dp,
+            if (isSelected) FoxyPrimary else FoxyBorder
+        )
+    ) {
+        Column(
+            modifier = Modifier.padding(vertical = 12.dp, horizontal = 6.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = title,
+                tint = if (isSelected) FoxyPrimary else FoxyTextSecondary,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = title,
+                style = MaterialTheme.typography.labelSmall.copy(
+                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                ),
+                color = if (isSelected) FoxyPrimary else FoxyTextPrimary,
+                maxLines = 1
+            )
+        }
+    }
 }

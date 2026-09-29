@@ -53,6 +53,7 @@ import com.example.ui.theme.FoxyCardElevated
 import com.example.ui.theme.FoxyPrimary
 import com.example.ui.theme.FoxyPrimaryGlow
 import com.example.ui.theme.FoxySurface
+import com.example.ui.theme.FoxySurfaceVariant
 import com.example.ui.theme.FoxyTextPrimary
 import com.example.ui.theme.FoxyTextSecondary
 import com.example.ui.theme.FoxyTextTertiary
@@ -210,7 +211,7 @@ fun VideoTrimSheet(
                         colors = SliderDefaults.colors(
                             thumbColor = FoxyPrimaryGlow,
                             activeTrackColor = FoxyPrimary,
-                            inactiveTrackColor = Color(0xFF332D50)
+                            inactiveTrackColor = FoxySurfaceVariant
                         ),
                         modifier = Modifier.testTag("trim_range_slider")
                     )
@@ -238,7 +239,7 @@ fun VideoTrimSheet(
                             .height(6.dp)
                             .clip(RoundedCornerShape(3.dp)),
                         color = FoxyPrimary,
-                        trackColor = Color(0xFF262040)
+                        trackColor = FoxySurfaceVariant
                     )
                 }
             } else if (errorMessage != null) {

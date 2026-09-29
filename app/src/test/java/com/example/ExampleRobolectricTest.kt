@@ -58,5 +58,31 @@ class ExampleRobolectricTest {
     assertEquals(65_000_000L, testResult.savedBytes)
     assertEquals(65, testResult.reductionPercentage)
   }
+
+  @Test
+  fun `verify recorder default configuration`() {
+    val config = RecorderConfig()
+    assertEquals(VideoResolution.R_1080P, config.resolution)
+    assertEquals(FrameRate.FPS_60, config.frameRate)
+    assertEquals(Bitrate.B_16M, config.bitrate)
+    assertEquals(AudioSourceType.MIC, config.audioSource)
+    assertEquals(CountdownDuration.SEC_3, config.countdown)
+    assertTrue(config.floatingControlsEnabled)
+    assertTrue(config.hideOverlayDuringRecording)
+    assertTrue(config.shakeToStop)
+    assertEquals(com.example.model.ThemeMode.DARK, config.themeMode)
+  }
+
+  @Test
+  fun `verify theme mode values`() {
+    val modes = com.example.model.ThemeMode.entries
+    assertEquals(3, modes.size)
+    assertTrue(modes.contains(com.example.model.ThemeMode.DARK))
+    assertTrue(modes.contains(com.example.model.ThemeMode.LIGHT))
+    assertTrue(modes.contains(com.example.model.ThemeMode.SYSTEM))
+    assertEquals("Dark Mode", com.example.model.ThemeMode.DARK.title)
+    assertEquals("Light Mode", com.example.model.ThemeMode.LIGHT.title)
+    assertEquals("System Default", com.example.model.ThemeMode.SYSTEM.title)
+  }
 }
 

@@ -14,5 +14,8 @@ data class RecorderConfig(
     val watermarkEnabled: Boolean = false,
     val batterySaverMode: Boolean = false,
     val floatingControlsEnabled: Boolean = true,
+    val hideOverlayDuringRecording: Boolean = true,
+    val shakeToStop: Boolean = true,
+    val themeMode: ThemeMode = ThemeMode.DARK,
     val dedicatedFolderName: String = "FoxyRecordings"
 )

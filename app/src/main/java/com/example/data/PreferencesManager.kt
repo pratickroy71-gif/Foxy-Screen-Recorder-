@@ -10,6 +10,7 @@ import com.example.model.FacecamSize
 import com.example.model.FrameRate
 import com.example.model.RecorderConfig
 import com.example.model.RecordingOrientation
+import com.example.model.ThemeMode
 import com.example.model.VideoResolution
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -36,6 +37,9 @@ class PreferencesManager(context: Context) {
         val watermark = prefs.getBoolean("watermark", false)
         val batterySaver = prefs.getBoolean("battery_saver", false)
         val floating = prefs.getBoolean("floating_controls", true)
+        val hideOverlay = prefs.getBoolean("hide_overlay_during_recording", true)
+        val shake = prefs.getBoolean("shake_to_stop", true)
+        val themeName = prefs.getString("theme_mode", ThemeMode.DARK.name) ?: ThemeMode.DARK.name
 
         return RecorderConfig(
             resolution = try { VideoResolution.valueOf(resName) } catch (_: Exception) { VideoResolution.R_1080P },
@@ -50,7 +54,10 @@ class PreferencesManager(context: Context) {
             showTouchIndicators = touch,
             watermarkEnabled = watermark,
             batterySaverMode = batterySaver,
-            floatingControlsEnabled = floating
+            floatingControlsEnabled = floating,
+            hideOverlayDuringRecording = hideOverlay,
+            shakeToStop = shake,
+            themeMode = try { ThemeMode.valueOf(themeName) } catch (_: Exception) { ThemeMode.DARK }
         )
     }
 
@@ -71,6 +78,9 @@ class PreferencesManager(context: Context) {
             .putBoolean("watermark", newConfig.watermarkEnabled)
             .putBoolean("battery_saver", newConfig.batterySaverMode)
             .putBoolean("floating_controls", newConfig.floatingControlsEnabled)
+            .putBoolean("hide_overlay_during_recording", newConfig.hideOverlayDuringRecording)
+            .putBoolean("shake_to_stop", newConfig.shakeToStop)
+            .putString("theme_mode", newConfig.themeMode.name)
             .apply()
     }
 }

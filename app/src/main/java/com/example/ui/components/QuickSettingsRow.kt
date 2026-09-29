@@ -96,7 +96,7 @@ fun QuickSettingsRow(
                         text = {
                             Text(
                                 text = res.label,
-                                color = if (config.resolution == res) FoxyPrimaryGlow else Color.White
+                                color = if (config.resolution == res) FoxyPrimaryGlow else FoxyTextPrimary
                             )
                         },
                         onClick = {
@@ -129,7 +129,7 @@ fun QuickSettingsRow(
                         text = {
                             Text(
                                 text = rate.label,
-                                color = if (config.frameRate == rate) FoxyPrimaryGlow else Color.White
+                                color = if (config.frameRate == rate) FoxyPrimaryGlow else FoxyTextPrimary
                             )
                         },
                         onClick = {
@@ -170,7 +170,7 @@ fun QuickSettingsRow(
                                 Text(
                                     text = src.label,
                                     fontWeight = FontWeight.SemiBold,
-                                    color = if (config.audioSource == src) FoxyPrimaryGlow else Color.White
+                                    color = if (config.audioSource == src) FoxyPrimaryGlow else FoxyTextPrimary
                                 )
                                 Text(
                                     text = src.description,

@@ -53,6 +53,7 @@ import com.example.ui.screens.MainBottomBar
 import com.example.ui.screens.NavigationTab
 import com.example.ui.screens.RecordingsScreen
 import com.example.ui.screens.SettingsScreen
+import com.example.ui.theme.FoxyBackground
 import com.example.ui.theme.FoxyScreenRecorderTheme
 import com.example.util.ShareHelper
 import kotlinx.coroutines.Job
@@ -73,7 +74,8 @@ class MainActivity : ComponentActivity() {
         appDatabase = AppDatabase.getDatabase(this)
 
         setContent {
-            FoxyScreenRecorderTheme {
+            val config by prefsManager.configFlow.collectAsState()
+            FoxyScreenRecorderTheme(themeMode = config.themeMode) {
                 MainAppContent(
                     prefsManager = prefsManager,
                     appDatabase = appDatabase
@@ -210,6 +212,7 @@ private fun MainAppContent(
     }
 
     Scaffold(
+        containerColor = FoxyBackground,
         bottomBar = {
             MainBottomBar(
                 currentTab = currentTab,
